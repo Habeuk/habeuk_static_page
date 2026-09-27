@@ -1,0 +1,16 @@
+entity.hbk_static_page.canonical:
+  route_name: entity.hbk_static_page.canonical
+  base_route: entity.hbk_static_page.canonical
+  title: 'Voir'
+
+entity.hbk_static_page.edit_form:
+  route_name: entity.hbk_static_page.edit_form
+  base_route: entity.hbk_static_page.canonical
+  title: 'Modifier'
+  weight: 10
+
+entity.hbk_static_page.delete_form:
+  route_name: entity.hbk_static_page.delete_form
+  base_route: entity.hbk_static_page.canonical
+  title: 'Supprimer'
+  weight: 20

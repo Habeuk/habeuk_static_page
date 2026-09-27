@@ -1,0 +1,9 @@
+name: 'Habeuk Static Page'
+type: module
+description: 'Crée des pages HTML statiques ultra-rapides pour les promotions. Aucun style Drupal n''est chargé. Header + Body + Footer.'
+core_version_requirement: ^10 || ^11
+package: Habeuk
+dependencies:
+  - drupal:path
+  - drupal:user
+  - drupal:system

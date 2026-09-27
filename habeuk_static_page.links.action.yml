@@ -1,0 +1,5 @@
+entity.hbk_static_page.add_form:
+  route_name: entity.hbk_static_page.add_form
+  title: 'Ajouter une page statique'
+  appears_on:
+    - entity.hbk_static_page.collection

@@ -1,0 +1,14 @@
+{
+    "name": "habeuk/habeuk_static_page",
+    "description": "Pour les pages static principalement de promotion.",
+    "type": "drupal-custom-module",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "kouwa stephane",
+            "email": "kksasteph888@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}

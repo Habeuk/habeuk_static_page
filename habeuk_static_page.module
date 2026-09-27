@@ -1,0 +1,45 @@
+<?php
+
+/**
+ * @file
+ * Module file for Habeuk Static Page.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_theme().
+ *
+ * We deliberately do NOT provide a theme hook for the public view
+ * because the Controller returns raw HTML.
+ * This keeps the public rendering path as light as possible.
+ */
+function habeuk_static_page_theme($existing, $type, $theme, $path) {
+  return [];
+}
+
+/**
+ * Implements hook_entity_type_build().
+ *
+ * Optional: ensure the canonical route is correctly registered.
+ */
+function habeuk_static_page_entity_type_build(array &$entity_types) {
+  // Nothing extra needed – everything is in the annotation.
+}
+
+/**
+ * Implements hook_form_alter() to improve UX on the entity form.
+ */
+function habeuk_static_page_form_hbk_static_page_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
+  // Make the textareas larger and more comfortable for pasting AI HTML.
+  // string_long widgets use ['widget'][0]['value'] as well.
+  foreach (['header', 'body', 'footer'] as $field) {
+    if (isset($form[$field]['widget'][0]['value'])) {
+      $rows = $field === 'body' ? 22 : ($field === 'header' ? 14 : 10);
+      $form[$field]['widget'][0]['value']['#rows'] = $rows;
+      $form[$field]['widget'][0]['value']['#attributes']['style'] = 'font-family: monospace; font-size: 13px;';
+      $form[$field]['widget'][0]['value']['#attributes']['spellcheck'] = 'false';
+    }
+  }
+}

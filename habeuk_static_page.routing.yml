@@ -1,0 +1,50 @@
+# Collection (admin list)
+entity.hbk_static_page.collection:
+  path: '/admin/content/static-pages'
+  defaults:
+    _entity_list: 'hbk_static_page'
+    _title: 'Pages statiques (Promo)'
+  requirements:
+    _permission: 'administer hbk_static_page'
+
+# Add form
+entity.hbk_static_page.add_form:
+  path: '/admin/content/static-pages/add'
+  defaults:
+    _entity_form: 'hbk_static_page.add'
+    _title: 'Ajouter une page statique'
+  requirements:
+    _permission: 'create hbk_static_page'
+
+# Edit form
+entity.hbk_static_page.edit_form:
+  path: '/admin/content/static-pages/{hbk_static_page}/edit'
+  defaults:
+    _entity_form: 'hbk_static_page.edit'
+    _title: 'Modifier la page statique'
+  requirements:
+    _entity_access: 'hbk_static_page.update'
+
+# Delete form
+entity.hbk_static_page.delete_form:
+  path: '/admin/content/static-pages/{hbk_static_page}/delete'
+  defaults:
+    _entity_form: 'hbk_static_page.delete'
+    _title: 'Supprimer la page statique'
+  requirements:
+    _entity_access: 'hbk_static_page.delete'
+
+# Canonical = Rendu ultra-rapide (public)
+entity.hbk_static_page.canonical:
+  path: '/promo/{hbk_static_page}'
+  defaults:
+    _controller: '\Drupal\habeuk_static_page\Controller\StaticPageController::view'
+    _title_callback: '\Drupal\habeuk_static_page\Controller\StaticPageController::title'
+  requirements:
+    _entity_access: 'hbk_static_page.view'
+  options:
+    parameters:
+      hbk_static_page:
+        type: entity:hbk_static_page
+    # Important pour le cache page
+    no_cache: FALSE

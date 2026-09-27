@@ -1,0 +1,6 @@
+entity.hbk_static_page.collection:
+  title: 'Pages statiques (Promo)'
+  description: 'Gérer les pages HTML statiques ultra-rapides pour les promotions.'
+  route_name: entity.hbk_static_page.collection
+  parent: system.admin_content
+  weight: 50

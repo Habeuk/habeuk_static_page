@@ -1,0 +1,15 @@
+administer hbk_static_page:
+  title: 'Administrer les pages statiques Habeuk'
+  restrict access: true
+
+view hbk_static_page:
+  title: 'Voir les pages statiques Habeuk'
+
+create hbk_static_page:
+  title: 'Créer des pages statiques Habeuk'
+
+edit hbk_static_page:
+  title: 'Modifier les pages statiques Habeuk'
+
+delete hbk_static_page:
+  title: 'Supprimer les pages statiques Habeuk'
