@@ -40,14 +40,18 @@ function habeuk_static_page_preprocess_habeuk_email_wrap(array &$variables) {
   $site_slogan = $config->get('slogan');
   // Logo par défaut : chemin absolu vers un fichier du thème
   if (empty($variables['logo'])) {
-    $logo_path = \Drupal::theme()->getActiveTheme()->getLogo();
-    $variables['logo'] = \Drupal::request()->getSchemeAndHttpHost() . '/' . $logo_path;
+    // on a un bug dans un autre module qui appeche de recuperer le bon logo. on
+    // force.
+    // $logo_path = \Drupal::theme()->getActiveTheme()->getLogo();
+    // $variables['logo'] = \Drupal::request()->getSchemeAndHttpHost() . '/' .
+    // $logo_path;
+    $variables['logo'] = "https://habeuk.com/sites/default/files/styles/medium/public/2024-11/hlogo.png";
   }
   
   // En-tête : peut être configuré ailleurs, pour l'instant une valeur par
   // défaut
   if (empty($variables['header'])) {
-    $variables['header'] = '<h1>' . $variables['site_name'] . '</h1>';
+    $variables['header'] = '<h1 style="font-size: 28px; font-weight: 900;">' . $variables['site_name'] . '</h1>';
   }
   
   // Pied de page : par défaut avec mentions légales
