@@ -16,7 +16,44 @@ use Drupal\Core\Form\FormStateInterface;
  * This keeps the public rendering path as light as possible.
  */
 function habeuk_static_page_theme($existing, $type, $theme, $path) {
-  return [];
+  return [
+    'habeuk_email_wrap' => [
+      'variables' => [
+        'body' => NULL,
+        'header' => NULL,
+        'footer' => NULL,
+        'logo' => NULL,
+        'site_name' => NULL
+      ]
+    ]
+  ];
+}
+
+/**
+ * Implements template_preprocess_habeuk_email_wrap().
+ */
+function habeuk_static_page_preprocess_habeuk_email_wrap(array &$variables) {
+  $config = \Drupal::config('system.site');
+  
+  // Nom du site (récupéré depuis system.site.name)
+  $variables['site_name'] = $config->get('name');
+  $site_slogan = $config->get('slogan');
+  // Logo par défaut : chemin absolu vers un fichier du thème
+  if (empty($variables['logo'])) {
+    $logo_path = \Drupal::theme()->getActiveTheme()->getLogo();
+    $variables['logo'] = \Drupal::request()->getSchemeAndHttpHost() . '/' . $logo_path;
+  }
+  
+  // En-tête : peut être configuré ailleurs, pour l'instant une valeur par
+  // défaut
+  if (empty($variables['header'])) {
+    $variables['header'] = '<h1>' . $variables['site_name'] . '</h1>';
+  }
+  
+  // Pied de page : par défaut avec mentions légales
+  if (empty($variables['footer'])) {
+    $variables['footer'] = !empty($site_slogan) ? "<p> $site_slogan </p>" : '<p>Ce message a été envoyé automatiquement.</p>';
+  }
 }
 
 /**

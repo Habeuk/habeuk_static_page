@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin:0; padding:0; background-color:#f4f4f4; font-family:Arial, sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f4; padding:20px 0;">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" style="background-color:#ffffff; border-radius:8px; overflow:hidden;">
+          {# En-tête #}
+          {# En-tête avec logo + texte #}
+        <tr>
+          <td style="background-color:#1a3c6e; padding:20px;">
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
+              <tr>
+                {# Cellule logo — alignée à gauche, centrée verticalement #}
+                <td width="120" valign="middle" align="left" style="padding:0 15px 0 0; vertical-align:middle;">
+                  {% if logo %}
+                    <img src="{{ logo }}" alt="{{ site_name|default('Logo') }}" width="120" style="display:block; border:0; outline:none; max-width:120px; height:auto;">
+                  {% endif %}
+                </td>
+        
+                {# Cellule texte — centrée horizontalement, centrée verticalement #}
+                <td valign="middle" align="center" style="color:#ffffff; text-align:center; vertical-align:middle;">
+                  {{ header|raw }}
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+          {# Corps #}
+          <tr>
+            <td style="padding:30px; color:#333333; font-size:14px; line-height:1.6;">
+              {{ body|raw }}
+            </td>
+          </tr>
+
+          {# Pied de page #}
+          <tr>
+            <td style="background-color:#f9f9f9; padding:20px; color:#777777; font-size:12px; text-align:center; border-top:1px solid #e0e0e0;">
+              {{ footer|raw }}
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

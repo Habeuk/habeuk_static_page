@@ -100,6 +100,20 @@ final class TestMailForm extends FormBase {
       '#required' => TRUE
     ];
     
+    $form['cc'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Copie (CC)'),
+      '#description' => $this->t('Adresses séparées par des virgules. Laissez vide pour aucun CC.'),
+      '#required' => FALSE
+    ];
+    
+    $form['bcc'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Copie cachée (BCC)'),
+      '#description' => $this->t('Adresses séparées par des virgules. Laissez vide pour aucun BCC.'),
+      '#required' => FALSE
+    ];
+    
     $form['description'] = [
       '#type' => 'text_format',
       '#title' => $this->t('Description'),
@@ -107,6 +121,18 @@ final class TestMailForm extends FormBase {
       '#format' => 'full_html', // ← le format par défaut
       '#rows' => 6,
       '#required' => TRUE
+    ];
+    
+    $form['attachment'] = [
+      '#type' => 'managed_file',
+      '#title' => $this->t('Pièce jointe'),
+      '#upload_location' => 'public://mail-attachments/',
+      '#upload_validators' => [
+        'FileExtension' => [
+          'extensions' => 'txt pdf png jpg'
+        ]
+      ],
+      '#required' => FALSE
     ];
     
     $form['actions'] = [
@@ -135,6 +161,26 @@ final class TestMailForm extends FormBase {
     if ($from !== '' && !\Drupal::service('email.validator')->isValid($from)) {
       $form_state->setErrorByName('from', $this->t("L'adresse de l'expéditeur est invalide."));
     }
+    
+    $validator = \Drupal::service('email.validator');
+    
+    foreach ([
+      'cc',
+      'bcc'
+    ] as $field) {
+      $value = trim((string) $form_state->getValue($field));
+      if ($value !== '') {
+        $addresses = array_map('trim', explode(',', $value));
+        foreach ($addresses as $address) {
+          if ($address !== '' && !$validator->isValid($address)) {
+            $form_state->setErrorByName($field, $this->t("L'adresse @address dans @field est invalide.", [
+              '@address' => $address,
+              '@field' => $field
+            ]));
+          }
+        }
+      }
+    }
   }
   
   /**
@@ -160,46 +206,35 @@ final class TestMailForm extends FormBase {
       'from' => $replyTo ?: self::DEFAULT_FROM
     ];
     
+    $params['reply_to'] = $replyTo;
+    
+    // CC optionnel
+    $cc = trim((string) $form_state->getValue('cc'));
+    if ($cc !== '') {
+      $params['cc'] = $cc;
+    }
+    
+    // BCC optionnel
+    $bcc = trim((string) $form_state->getValue('bcc'));
+    if ($bcc !== '') {
+      $params['bcc'] = $bcc;
+    }
+    
+    // Récupération du fichier uploadé.
+    $fid = $form_state->getValue('attachment');
+    if (!empty($fid[0])) {
+      $file = \Drupal\file\Entity\File::load($fid[0]);
+      if ($file) {
+        $params['attachments'][] = [
+          'filepath' => $file->getFileUri(),
+          'filename' => $file->getFilename(),
+          'filemime' => $file->getMimeType()
+        ];
+      }
+    }
+    
     // Appel standard : module, key, to, langcode, params, reply, send
     $result = $this->mailManager->mail('habeuk_static_page', 'test_mail', $to, $langcode, $params, $replyTo ?: NULL, TRUE);
-    
-    if (!empty($result['result'])) {
-      $this->messenger()->addStatus($this->t('Mail envoyé à @to.', [
-        '@to' => $to
-      ]));
-    }
-    else {
-      $this->messenger()->addError($this->t("Échec de l'envoi du mail à @to.", [
-        '@to' => $to
-      ]));
-    }
-  }
-  
-  /**
-   * Envoit de formulaire.
-   *
-   * {@inheritdoc}
-   */
-  public function submitFormOLD(array &$form, FormStateInterface $form_state): void {
-    $to = trim((string) $form_state->getValue('to'));
-    $from = trim((string) $form_state->getValue('from'));
-    $description = trim((string) $form_state->getValue('description'));
-    
-    if ($from === '') {
-      $from = self::DEFAULT_FROM;
-    }
-    
-    $subject = $this->t("Test d'envoi depuis habeuk_static_page");
-    $body = $description;
-    
-    $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
-    
-    $params = [
-      'subject' => $subject,
-      'body' => $body
-    ];
-    
-    $result = $this->mailManager->mail('habeuk_static_page', 'test_mail', $to, $langcode, $params, $from, TRUE);
     
     if (!empty($result['result'])) {
       $this->messenger()->addStatus($this->t('Mail envoyé à @to.', [
