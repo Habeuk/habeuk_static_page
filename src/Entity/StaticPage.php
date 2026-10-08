@@ -28,6 +28,9 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
  *     "list_builder" = "Drupal\habeuk_static_page\ListBuilder\StaticPageListBuilder",
  *     "access" = "Drupal\habeuk_static_page\StaticPageAccessControlHandler",
+ *     "route_provider" = {
+ *       "html" = "Drupal\habeuk_static_page\StaticPageHtmlRouteProvider",
+ *     },
  *     "form" = {
  *       "default" = "Drupal\habeuk_static_page\Form\StaticPageForm",
  *       "add" = "Drupal\habeuk_static_page\Form\StaticPageForm",
@@ -54,7 +57,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  *     "delete-form" = "/admin/content/static-pages/{hbk_static_page}/delete",
  *     "collection" = "/admin/content/static-pages",
  *   },
- *   field_ui_base_route = "entity.hbk_static_page.collection",
+ *   field_ui_base_route = "hbk_static_page.settings",
  * )
  */
 class StaticPage extends ContentEntityBase implements StaticPageInterface {
@@ -92,27 +95,24 @@ class StaticPage extends ContentEntityBase implements StaticPageInterface {
   }
   
   /**
-   *
-   * {@inheritdoc}
+   * Retourne le contenu de l'entête HTML de la page.
    */
   public function getHeader() {
     return $this->get('header')->value;
   }
   
   /**
-   *
-   * {@inheritdoc}
+   * Retourne le contenu CSS de la page.
    */
-  public function getBody() {
-    return $this->get('body')->value;
+  public function getCss() {
+    return $this->get('css')->value;
   }
   
   /**
-   *
-   * {@inheritdoc}
+   * Retourne le contenu JavaScript de la page.
    */
-  public function getFooter() {
-    return $this->get('footer')->value;
+  public function getJavascript() {
+    return $this->get('javascript')->value;
   }
   
   /**
@@ -151,7 +151,7 @@ class StaticPage extends ContentEntityBase implements StaticPageInterface {
     ])->setDisplayConfigurable('form', TRUE)->setDisplayConfigurable('view', FALSE);
     
     // Header : HTML complet du début de page (doctype, head, ouverture body,
-    // etc.)
+    // etc.).
     // string_long = pas de format texte → zéro overhead de filtrage, HTML/JS
     // libre.
     $fields['header'] = BaseFieldDefinition::create('string_long')->setLabel(new TranslatableMarkup('Entête HTML'))->setDescription(new TranslatableMarkup("Contient le début de la page HTML (doctype, <html>, <head>, ouverture <body>...). Collez ici le HTML généré par l'IA."))->setRequired(TRUE)->setDisplayOptions('form', [
@@ -162,8 +162,8 @@ class StaticPage extends ContentEntityBase implements StaticPageInterface {
       ]
     ])->setDisplayConfigurable('form', TRUE)->setDisplayConfigurable('view', FALSE);
     
-    // Body : contenu principal
-    $fields['body'] = BaseFieldDefinition::create('string_long')->setLabel(new TranslatableMarkup('CSS'))->setDescription(new TranslatableMarkup('Feuille de style CSS de la page (ou contenu principal HTML).'))->setRequired(FALSE)->setDisplayOptions('form', [
+    // Css : feuille de style de la page.
+    $fields['css'] = BaseFieldDefinition::create('string_long')->setLabel(new TranslatableMarkup('CSS'))->setDescription(new TranslatableMarkup('Feuille de style CSS de la page (ou contenu principal HTML).'))->setRequired(FALSE)->setDisplayOptions('form', [
       'type' => 'string_textarea',
       'weight' => 5,
       'settings' => [
@@ -171,8 +171,8 @@ class StaticPage extends ContentEntityBase implements StaticPageInterface {
       ]
     ])->setDisplayConfigurable('form', TRUE)->setDisplayConfigurable('view', FALSE);
     
-    // Footer : fermeture de page + scripts éventuels
-    $fields['footer'] = BaseFieldDefinition::create('string_long')->setLabel(new TranslatableMarkup('JavaScript'))->setDescription(new TranslatableMarkup('Code JavaScript de la page (scripts, tracking, fermeture </body></html>).'))->setRequired(FALSE)->setDisplayOptions('form', [
+    // Javascript : scripts et fermeture de page.
+    $fields['javascript'] = BaseFieldDefinition::create('string_long')->setLabel(new TranslatableMarkup('JavaScript'))->setDescription(new TranslatableMarkup('Code JavaScript de la page (scripts, tracking, fermeture </body></html>).'))->setRequired(FALSE)->setDisplayOptions('form', [
       'type' => 'string_textarea',
       'weight' => 10,
       'settings' => [
@@ -184,7 +184,7 @@ class StaticPage extends ContentEntityBase implements StaticPageInterface {
     
     $fields['changed'] = BaseFieldDefinition::create('changed')->setLabel(new TranslatableMarkup('Modifié'))->setDescription(new TranslatableMarkup('La date de dernière modification.'));
     
-    // Path alias support (core path module)
+    // Path alias support (core path module).
     $fields['path'] = BaseFieldDefinition::create('path')->setLabel(new TranslatableMarkup('URL alias'))->setTranslatable(FALSE)->setDisplayOptions('form', [
       'type' => 'path',
       'weight' => 30

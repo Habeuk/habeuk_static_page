@@ -48,3 +48,4 @@ entity.hbk_static_page.canonical:
         type: entity:hbk_static_page
     # Important pour le cache page
     no_cache: FALSE
+

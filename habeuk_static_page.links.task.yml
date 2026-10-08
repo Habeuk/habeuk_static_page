@@ -14,3 +14,8 @@ entity.hbk_static_page.delete_form:
   base_route: entity.hbk_static_page.canonical
   title: 'Supprimer'
   weight: 20
+
+hbk_static_page.settings:
+  route_name: hbk_static_page.settings
+  title: 'Paramètres'
+  base_route: hbk_static_page.settings

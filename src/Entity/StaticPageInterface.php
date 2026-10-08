@@ -11,67 +11,58 @@ use Drupal\user\EntityOwnerInterface;
  * Provides an interface defining a Static Page entity.
  */
 interface StaticPageInterface extends ContentEntityInterface, EntityChangedInterface, EntityPublishedInterface, EntityOwnerInterface {
-
+  
   /**
    * Gets the title.
    *
-   * @return string
-   *   Title of the entity.
+   * @return string Title of the entity.
    */
   public function getTitle();
-
+  
   /**
    * Sets the title.
    *
    * @param string $title
-   *   The title.
-   *
-   * @return \Drupal\habeuk_static_page\Entity\StaticPageInterface
-   *   The called entity.
+   *        The title.
+   *        
+   * @return \Drupal\habeuk_static_page\Entity\StaticPageInterface The called
+   *         entity.
    */
   public function setTitle($title);
-
+  
   /**
    * Gets the header HTML.
    *
-   * @return string|null
-   *   The header content.
+   * @return string|null The header content.
    */
   public function getHeader();
-
+  
   /**
-   * Gets the body HTML.
-   *
-   * @return string|null
-   *   The body content.
+   * Retourne le contenu CSS de la page.
    */
-  public function getBody();
-
+  public function getCss();
+  
   /**
-   * Gets the footer HTML.
-   *
-   * @return string|null
-   *   The footer content.
+   * Retourne le contenu JavaScript de la page.
    */
-  public function getFooter();
-
+  public function getJavascript();
+  
   /**
    * Gets the creation timestamp.
    *
-   * @return int
-   *   Creation timestamp of the entity.
+   * @return int Creation timestamp of the entity.
    */
   public function getCreatedTime();
-
+  
   /**
    * Sets the creation timestamp.
    *
    * @param int $timestamp
-   *   The creation timestamp.
-   *
-   * @return \Drupal\habeuk_static_page\Entity\StaticPageInterface
-   *   The called entity.
+   *        The creation timestamp.
+   *        
+   * @return \Drupal\habeuk_static_page\Entity\StaticPageInterface The called
+   *         entity.
    */
   public function setCreatedTime($timestamp);
-
+  
 }

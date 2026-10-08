@@ -44,8 +44,8 @@ class StaticPageAssetGenerator {
     $css_uri = self::ASSET_DIRECTORY . '/' . $base_name . '.css';
     $js_uri = self::ASSET_DIRECTORY . '/' . $base_name . '.js';
     
-    $css = (string) $page->getBody();
-    $js = (string) $page->getFooter();
+    $css = (string) $page->getCss();
+    $js = (string) $page->getJavascript();
     
     $css_changed = $this->syncFile($css_uri, $css);
     $js_changed = $this->syncFile($js_uri, $js);

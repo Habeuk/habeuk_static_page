@@ -29,10 +29,10 @@ class StaticPageForm extends ContentEntityForm {
     ];
     $form['help']['text'] = [
       '#markup' => '<p>' . $this->t('1. Demandez à l’IA de générer une page HTML complète.<br>
-2. Collez le début (doctype + head + ouverture body) dans <strong>Entête HTML</strong>.<br>
-3. Collez le contenu principal dans <strong>Body</strong>.<br>
-4. Collez la fermeture + scripts dans <strong>Pied de page HTML</strong>.<br>
-5. Publiez → la page est servie instantanément sans aucun CSS/JS Drupal.') . '</p>'
+        2. Collez le début (doctype + head + ouverture body) dans <strong>Entête HTML</strong>.<br>
+        3. Collez le CSS de la page dans <strong>CSS</strong>.<br>
+        4. Collez le JavaScript + fermeture de page dans <strong>JavaScript</strong>.<br>
+        5. Publiez → la page est servie instantanément sans aucun CSS/JS Drupal.') . '</p>'
     ];
     
     // Bloc des assets générés (uniquement si l'entité existe déjà).
