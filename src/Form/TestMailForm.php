@@ -27,7 +27,29 @@ final class TestMailForm extends FormBase {
   /**
    * Valeur par défaut du champ description.
    */
-  const DEFAULT_DESCRIPTION = 'Ceci est un mail de test envoyé depuis le module habeuk_static_page.';
+  const DEFAULT_DESCRIPTION = <<<HTML
+    <h2 style="font-family: Arial, Helvetica, sans-serif; font-size: 20px; font-weight: bold; color: #1a3c6e; margin: 0 0 12px 0; padding: 0;">
+      Test d'envoi de mail
+    </h2>
+    
+    <p style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 1.6; color: #333333; margin: 0 0 12px 0;">
+      Ceci est un <strong style="color: #1a3c6e;">mail de test</strong> envoyé depuis le module
+      <span style="background-color: #eef3fa; color: #1a3c6e; padding: 2px 6px; border-radius: 3px; font-family: Consolas, Monaco, monospace; font-size: 13px;">
+        habeuk_static_page
+      </span>.
+    </p>
+    
+    <p style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 1.6; color: #333333; margin: 0 0 12px 0;">
+      Vous pouvez modifier ce contenu, il sera envoyé tel quel dans le corps du mail.
+    </p>
+    
+    <hr style="border: 0; border-top: 1px solid #e0e0e0; margin: 16px 0;">
+    
+    <p style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; line-height: 1.5; color: #777777; margin: 0;">
+      <em>Habeuk — Développement web &amp; solutions digitales</em><br>
+      <a href="https://habeuk.com" style="color: #1a3c6e; text-decoration: underline;">https://habeuk.com</a>
+    </p>    
+  HTML;
   
   /**
    * Le service mail manager.
@@ -79,9 +101,10 @@ final class TestMailForm extends FormBase {
     ];
     
     $form['description'] = [
-      '#type' => 'textarea',
+      '#type' => 'text_format',
       '#title' => $this->t('Description'),
-      '#default_value' => self::DEFAULT_DESCRIPTION,
+      '#default_value' => "<strong>" . date("d-m-y h:i:s") . "</strong>" . self::DEFAULT_DESCRIPTION,
+      '#format' => 'full_html', // ← le format par défaut
       '#rows' => 6,
       '#required' => TRUE
     ];
@@ -122,15 +145,15 @@ final class TestMailForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state): void {
     $to = trim((string) $form_state->getValue('to'));
-    $replyTo = trim((string) $form_state->getValue('from')); // ← renomme, c'est
-                                                             // un Reply-To
-    $description = trim((string) $form_state->getValue('description'));
+    $replyTo = trim((string) $form_state->getValue('from'));
+    $value = $form_state->getValue('description');
+    $description = !empty($value["value"]) ? trim((string) $value["value"]) : '';
     
     $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
     
     // Les données passées au hook_mail()
     $params = [
-      'subject' => "Test d'envoi depuis habeuk_static_page",
+      'subject' => "Test d'envoi depuis habeuk_static_page " . date("d-m-y h:i:s"),
       'body' => $description,
       // tu peux aussi passer l'adresse "from" du formulaire si hook_mail doit
       // la lire
