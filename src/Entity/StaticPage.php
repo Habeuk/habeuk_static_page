@@ -58,162 +58,139 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * )
  */
 class StaticPage extends ContentEntityBase implements StaticPageInterface {
-
+  
   use EntityChangedTrait;
   use EntityPublishedTrait;
   use EntityOwnerTrait;
-
+  
   /**
+   *
    * {@inheritdoc}
    */
   public static function preCreate(EntityStorageInterface $storage, array &$values) {
     parent::preCreate($storage, $values);
     $values += [
-      'uid' => \Drupal::currentUser()->id(),
+      'uid' => \Drupal::currentUser()->id()
     ];
   }
-
+  
   /**
+   *
    * {@inheritdoc}
    */
   public function getTitle() {
     return $this->get('title')->value;
   }
-
+  
   /**
+   *
    * {@inheritdoc}
    */
   public function setTitle($title) {
     $this->set('title', $title);
     return $this;
   }
-
+  
   /**
+   *
    * {@inheritdoc}
    */
   public function getHeader() {
     return $this->get('header')->value;
   }
-
+  
   /**
+   *
    * {@inheritdoc}
    */
   public function getBody() {
     return $this->get('body')->value;
   }
-
+  
   /**
+   *
    * {@inheritdoc}
    */
   public function getFooter() {
     return $this->get('footer')->value;
   }
-
+  
   /**
+   *
    * {@inheritdoc}
    */
   public function getCreatedTime() {
     return $this->get('created')->value;
   }
-
+  
   /**
+   *
    * {@inheritdoc}
    */
   public function setCreatedTime($timestamp) {
     $this->set('created', $timestamp);
     return $this;
   }
-
+  
   /**
+   *
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields = parent::baseFieldDefinitions($entity_type);
-
+    
     // Add the published field.
     $fields += static::publishedBaseFieldDefinitions($entity_type);
-
+    
     // Owner field.
     $fields += static::ownerBaseFieldDefinitions($entity_type);
-
-    $fields['title'] = BaseFieldDefinition::create('string')
-      ->setLabel(new TranslatableMarkup('Titre'))
-      ->setDescription(new TranslatableMarkup('Titre interne de la page (utilisé aussi pour le <title> si non présent dans le header).'))
-      ->setRequired(TRUE)
-      ->setSetting('max_length', 255)
-      ->setDisplayOptions('form', [
-        'type' => 'string_textfield',
-        'weight' => -10,
-      ])
-      ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayConfigurable('view', FALSE);
-
-    // Header : HTML complet du début de page (doctype, head, ouverture body, etc.)
-    // string_long = pas de format texte → zéro overhead de filtrage, HTML/JS libre.
-    $fields['header'] = BaseFieldDefinition::create('string_long')
-      ->setLabel(new TranslatableMarkup('Entête HTML'))
-      ->setDescription(new TranslatableMarkup('Contient le début de la page HTML (doctype, <html>, <head>, ouverture <body>...). Collez ici le HTML généré par l''IA.'))
-      ->setRequired(FALSE)
-      ->setDisplayOptions('form', [
-        'type' => 'string_textarea',
-        'weight' => 0,
-        'settings' => [
-          'rows' => 12,
-        ],
-      ])
-      ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayConfigurable('view', FALSE);
-
+    
+    $fields['title'] = BaseFieldDefinition::create('string')->setLabel(new TranslatableMarkup('Titre'))->setDescription(new TranslatableMarkup('Titre interne de la page (utilisé aussi pour le <title> si non présent dans le header).'))->setRequired(TRUE)->setSetting('max_length', 255)->setDisplayOptions('form', [
+      'type' => 'string_textfield',
+      'weight' => -10
+    ])->setDisplayConfigurable('form', TRUE)->setDisplayConfigurable('view', FALSE);
+    
+    // Header : HTML complet du début de page (doctype, head, ouverture body,
+    // etc.)
+    // string_long = pas de format texte → zéro overhead de filtrage, HTML/JS
+    // libre.
+    $fields['header'] = BaseFieldDefinition::create('string_long')->setLabel(new TranslatableMarkup('Entête HTML'))->setDescription(new TranslatableMarkup("Contient le début de la page HTML (doctype, <html>, <head>, ouverture <body>...). Collez ici le HTML généré par l'IA."))->setRequired(FALSE)->setDisplayOptions('form', [
+      'type' => 'string_textarea',
+      'weight' => 0,
+      'settings' => [
+        'rows' => 12
+      ]
+    ])->setDisplayConfigurable('form', TRUE)->setDisplayConfigurable('view', FALSE);
+    
     // Body : contenu principal
-    $fields['body'] = BaseFieldDefinition::create('string_long')
-      ->setLabel(new TranslatableMarkup('Body (contenu)'))
-      ->setDescription(new TranslatableMarkup('Contenu principal de la page. Peut être du HTML complet ou juste le contenu entre header et footer.'))
-      ->setRequired(TRUE)
-      ->setDisplayOptions('form', [
-        'type' => 'string_textarea',
-        'weight' => 5,
-        'settings' => [
-          'rows' => 20,
-        ],
-      ])
-      ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayConfigurable('view', FALSE);
-
+    $fields['body'] = BaseFieldDefinition::create('string_long')->setLabel(new TranslatableMarkup('Body (contenu)'))->setDescription(new TranslatableMarkup('Contenu principal de la page. Peut être du HTML complet ou juste le contenu entre header et footer.'))->setRequired(TRUE)->setDisplayOptions('form', [
+      'type' => 'string_textarea',
+      'weight' => 5,
+      'settings' => [
+        'rows' => 20
+      ]
+    ])->setDisplayConfigurable('form', TRUE)->setDisplayConfigurable('view', FALSE);
+    
     // Footer : fermeture de page + scripts éventuels
-    $fields['footer'] = BaseFieldDefinition::create('string_long')
-      ->setLabel(new TranslatableMarkup('Pied de page HTML'))
-      ->setDescription(new TranslatableMarkup('Contient la fin de la page HTML (fermeture </body>, </html>, scripts tracking, etc.).'))
-      ->setRequired(FALSE)
-      ->setDisplayOptions('form', [
-        'type' => 'string_textarea',
-        'weight' => 10,
-        'settings' => [
-          'rows' => 8,
-        ],
-      ])
-      ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayConfigurable('view', FALSE);
-
-    $fields['created'] = BaseFieldDefinition::create('created')
-      ->setLabel(new TranslatableMarkup('Créé'))
-      ->setDescription(new TranslatableMarkup('La date de création.'));
-
-    $fields['changed'] = BaseFieldDefinition::create('changed')
-      ->setLabel(new TranslatableMarkup('Modifié'))
-      ->setDescription(new TranslatableMarkup('La date de dernière modification.'));
-
+    $fields['footer'] = BaseFieldDefinition::create('string_long')->setLabel(new TranslatableMarkup('Pied de page HTML'))->setDescription(new TranslatableMarkup('Contient la fin de la page HTML (fermeture </body>, </html>, scripts tracking, etc.).'))->setRequired(FALSE)->setDisplayOptions('form', [
+      'type' => 'string_textarea',
+      'weight' => 10,
+      'settings' => [
+        'rows' => 8
+      ]
+    ])->setDisplayConfigurable('form', TRUE)->setDisplayConfigurable('view', FALSE);
+    
+    $fields['created'] = BaseFieldDefinition::create('created')->setLabel(new TranslatableMarkup('Créé'))->setDescription(new TranslatableMarkup('La date de création.'));
+    
+    $fields['changed'] = BaseFieldDefinition::create('changed')->setLabel(new TranslatableMarkup('Modifié'))->setDescription(new TranslatableMarkup('La date de dernière modification.'));
+    
     // Path alias support (core path module)
-    $fields['path'] = BaseFieldDefinition::create('path')
-      ->setLabel(new TranslatableMarkup('URL alias'))
-      ->setTranslatable(FALSE)
-      ->setDisplayOptions('form', [
-        'type' => 'path',
-        'weight' => 30,
-      ])
-      ->setDisplayConfigurable('form', TRUE)
-      ->setComputed(TRUE);
-
+    $fields['path'] = BaseFieldDefinition::create('path')->setLabel(new TranslatableMarkup('URL alias'))->setTranslatable(FALSE)->setDisplayOptions('form', [
+      'type' => 'path',
+      'weight' => 30
+    ])->setDisplayConfigurable('form', TRUE)->setComputed(TRUE);
+    
     return $fields;
   }
-
+  
 }
