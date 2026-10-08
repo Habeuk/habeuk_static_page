@@ -49,6 +49,20 @@ function habeuk_static_page_form_hbk_static_page_form_alter(array &$form, FormSt
 }
 
 /**
+ * Pour permettre l'envoie de mail avec titre et contenu.
+ * Implements hook_mail().
+ */
+function habeuk_static_page_mail(string $key, array &$message, array $params): void {
+  if ($key !== 'test_mail') {
+    return;
+  }
+  
+  $message['subject'] = $params['subject'] ?? 'Test d\'envoi';
+  $message['body'][] = $params['body'] ?? '';
+  $message['headers']['Content-Type'] = 'text/html; charset=UTF-8';
+}
+
+/**
  * Implements hook_ENTITY_TYPE_insert() for hbk_static_page.
  */
 function habeuk_static_page_hbk_static_page_insert(EntityInterface $entity) {

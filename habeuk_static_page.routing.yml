@@ -49,3 +49,10 @@ entity.hbk_static_page.canonical:
     # Important pour le cache page
     no_cache: FALSE
 
+habeuk_static_page.test_mail_form:
+  path: '/habeuk/test-mail'
+  defaults:
+    _form: '\Drupal\habeuk_static_page\Form\TestMailForm'
+    _title: 'Test d''envoi de mail'
+  requirements:
+    _permission: 'administer site configuration'
