@@ -154,7 +154,7 @@ class StaticPage extends ContentEntityBase implements StaticPageInterface {
     // etc.)
     // string_long = pas de format texte → zéro overhead de filtrage, HTML/JS
     // libre.
-    $fields['header'] = BaseFieldDefinition::create('string_long')->setLabel(new TranslatableMarkup('Entête HTML'))->setDescription(new TranslatableMarkup("Contient le début de la page HTML (doctype, <html>, <head>, ouverture <body>...). Collez ici le HTML généré par l'IA."))->setRequired(FALSE)->setDisplayOptions('form', [
+    $fields['header'] = BaseFieldDefinition::create('string_long')->setLabel(new TranslatableMarkup('Entête HTML'))->setDescription(new TranslatableMarkup("Contient le début de la page HTML (doctype, <html>, <head>, ouverture <body>...). Collez ici le HTML généré par l'IA."))->setRequired(TRUE)->setDisplayOptions('form', [
       'type' => 'string_textarea',
       'weight' => 0,
       'settings' => [
@@ -163,7 +163,7 @@ class StaticPage extends ContentEntityBase implements StaticPageInterface {
     ])->setDisplayConfigurable('form', TRUE)->setDisplayConfigurable('view', FALSE);
     
     // Body : contenu principal
-    $fields['body'] = BaseFieldDefinition::create('string_long')->setLabel(new TranslatableMarkup('Body (contenu)'))->setDescription(new TranslatableMarkup('Contenu principal de la page. Peut être du HTML complet ou juste le contenu entre header et footer.'))->setRequired(TRUE)->setDisplayOptions('form', [
+    $fields['body'] = BaseFieldDefinition::create('string_long')->setLabel(new TranslatableMarkup('Body (contenu)'))->setDescription(new TranslatableMarkup('Contenu principal de la page. Peut être du HTML complet ou juste le contenu entre header et footer.'))->setRequired(FALSE)->setDisplayOptions('form', [
       'type' => 'string_textarea',
       'weight' => 5,
       'settings' => [
