@@ -1,0 +1,4 @@
+services:
+  habeuk_static_page.asset_generator:
+    class: Drupal\habeuk_static_page\Service\StaticPageAssetGenerator
+    arguments: ['@file_system']

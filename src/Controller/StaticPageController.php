@@ -33,26 +33,7 @@ class StaticPageController extends ControllerBase {
     
     // Build the full HTML document by simple concatenation.
     // This is intentionally minimal for maximum speed.
-    $header = (string) $hbk_static_page->getHeader();
-    $body = (string) $hbk_static_page->getBody();
-    $footer = (string) $hbk_static_page->getFooter();
-    
-    // If header is empty, provide a minimal valid HTML skeleton.
-    if (trim($header) === '') {
-      $title = htmlspecialchars($hbk_static_page->getTitle(), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-      $header = '<!DOCTYPE html>
-<html lang="fr" class="scroll-smooth">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>' . $title . '</title>
-</head>
-<body>
-';
-      $footer = $footer ?: '</body></html>';
-    }
-    
-    $html = $header . $body . $footer;
+    $html = (string) $hbk_static_page->getHeader();
     
     // Create a CacheableResponse so Drupal Page Cache & Dynamic Page Cache
     // work.

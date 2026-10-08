@@ -163,7 +163,7 @@ class StaticPage extends ContentEntityBase implements StaticPageInterface {
     ])->setDisplayConfigurable('form', TRUE)->setDisplayConfigurable('view', FALSE);
     
     // Body : contenu principal
-    $fields['body'] = BaseFieldDefinition::create('string_long')->setLabel(new TranslatableMarkup('Body (contenu)'))->setDescription(new TranslatableMarkup('Contenu principal de la page. Peut être du HTML complet ou juste le contenu entre header et footer.'))->setRequired(FALSE)->setDisplayOptions('form', [
+    $fields['body'] = BaseFieldDefinition::create('string_long')->setLabel(new TranslatableMarkup('CSS'))->setDescription(new TranslatableMarkup('Feuille de style CSS de la page (ou contenu principal HTML).'))->setRequired(FALSE)->setDisplayOptions('form', [
       'type' => 'string_textarea',
       'weight' => 5,
       'settings' => [
@@ -172,7 +172,7 @@ class StaticPage extends ContentEntityBase implements StaticPageInterface {
     ])->setDisplayConfigurable('form', TRUE)->setDisplayConfigurable('view', FALSE);
     
     // Footer : fermeture de page + scripts éventuels
-    $fields['footer'] = BaseFieldDefinition::create('string_long')->setLabel(new TranslatableMarkup('Pied de page HTML'))->setDescription(new TranslatableMarkup('Contient la fin de la page HTML (fermeture </body>, </html>, scripts tracking, etc.).'))->setRequired(FALSE)->setDisplayOptions('form', [
+    $fields['footer'] = BaseFieldDefinition::create('string_long')->setLabel(new TranslatableMarkup('JavaScript'))->setDescription(new TranslatableMarkup('Code JavaScript de la page (scripts, tracking, fermeture </body></html>).'))->setRequired(FALSE)->setDisplayOptions('form', [
       'type' => 'string_textarea',
       'weight' => 10,
       'settings' => [

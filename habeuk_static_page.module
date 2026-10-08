@@ -1,10 +1,10 @@
 <?php
 
 /**
+ *
  * @file
  * Module file for Habeuk Static Page.
  */
-
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -34,7 +34,11 @@ function habeuk_static_page_entity_type_build(array &$entity_types) {
 function habeuk_static_page_form_hbk_static_page_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
   // Make the textareas larger and more comfortable for pasting AI HTML.
   // string_long widgets use ['widget'][0]['value'] as well.
-  foreach (['header', 'body', 'footer'] as $field) {
+  foreach ([
+    'header',
+    'body',
+    'footer'
+  ] as $field) {
     if (isset($form[$field]['widget'][0]['value'])) {
       $rows = $field === 'body' ? 22 : ($field === 'header' ? 14 : 10);
       $form[$field]['widget'][0]['value']['#rows'] = $rows;
@@ -42,4 +46,25 @@ function habeuk_static_page_form_hbk_static_page_form_alter(array &$form, FormSt
       $form[$field]['widget'][0]['value']['#attributes']['spellcheck'] = 'false';
     }
   }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert() for hbk_static_page.
+ */
+function habeuk_static_page_hbk_static_page_insert(EntityInterface $entity) {
+  \Drupal::service('habeuk_static_page.asset_generator')->generate($entity);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update() for hbk_static_page.
+ */
+function habeuk_static_page_hbk_static_page_update(EntityInterface $entity) {
+  \Drupal::service('habeuk_static_page.asset_generator')->generate($entity);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete() for hbk_static_page.
+ */
+function habeuk_static_page_hbk_static_page_delete(EntityInterface $entity) {
+  \Drupal::service('habeuk_static_page.asset_generator')->delete($entity);
 }
