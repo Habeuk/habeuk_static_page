@@ -56,3 +56,16 @@ habeuk_static_page.test_mail_form:
     _title: 'Test d''envoi de mail'
   requirements:
     _permission: 'administer site configuration'
+
+habeuk_static_page.image_resize:
+  path: '/habeuk-image/{width}/{height}/{scheme}'
+  defaults:
+    _controller: '\Drupal\habeuk_static_page\Controller\ImageResizeController::deliver'
+  requirements:
+    _access: 'TRUE'
+    width: \d+
+    height: \d+
+  options:
+    parameters:
+      scheme:
+        type: string

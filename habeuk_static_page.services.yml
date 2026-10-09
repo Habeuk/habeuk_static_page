@@ -2,3 +2,11 @@ services:
   habeuk_static_page.asset_generator:
     class: Drupal\habeuk_static_page\Service\StaticPageAssetGenerator
     arguments: ['@file_system']
+
+  habeuk_static_page.image_resizer:
+    class: Drupal\habeuk_static_page\Service\ImageResizer
+    arguments:
+      - '@image.factory'
+      - '@file_system'
+      - '@lock'
+      - '@logger.factory'
